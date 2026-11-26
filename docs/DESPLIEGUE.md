@@ -42,14 +42,14 @@ App Android (APK)  ──HTTPS──▶  Render (Docker: PHP 8.3 + Apache + Lara
 1. Crear cuenta en https://render.com (con GitHub) y dar acceso al repositorio.
 2. **New → Blueprint**, elegir el repositorio y la rama `main`. Render lee `render.yaml`.
 3. Cuando pida `DB_URL`, pegar la cadena de Neon y pulsar **Apply**.
-4. Esperar el primer despliegue (5 a 10 minutos). Al terminar, la URL queda como `https://galaxia-soporte-api.onrender.com`.
+4. Esperar el primer despliegue (5 a 10 minutos). Al terminar, la URL queda como `https://galaxia-soporte-api.onrender.com` (URL actual del proyecto).
 5. Comprobar: abrir `https://<url>/up` (debe responder 200).
 
 Las migraciones y los datos de prueba se ejecutan solos. Usuarios de prueba (clave `password`): `admin@galaxia.com`, `tecnico@galaxia.com`, `tecnico2@galaxia.com`, `usuario@galaxia.com`.
 
 ### 3. APK con Expo EAS
 1. Crear cuenta en https://expo.dev.
-2. En `app-movil/eas.json`, perfil `preview`, poner `EXPO_PUBLIC_API_URL` con `https://<url>/api`.
+2. `app-movil/eas.json` (perfiles `preview` y `production`) ya apunta a `https://galaxia-soporte-api.onrender.com/api`.
 3. En PowerShell, dentro de `app-movil`:
    ```powershell
    npm install
