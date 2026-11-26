@@ -14,8 +14,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $datos = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
+            'email' => ['required', 'email', 'max:150'],
+            'password' => ['required', 'string', 'max:255'],
             'device_name' => ['nullable', 'string', 'max:100'],
         ]);
 

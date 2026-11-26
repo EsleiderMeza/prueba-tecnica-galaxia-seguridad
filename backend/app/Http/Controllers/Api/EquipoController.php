@@ -15,6 +15,7 @@ class EquipoController extends Controller
     public function index(Request $request)
     {
         $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
             'estado' => ['nullable', Rule::in(Equipo::ESTADOS)],
             'categoria_id' => ['nullable', 'integer'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],

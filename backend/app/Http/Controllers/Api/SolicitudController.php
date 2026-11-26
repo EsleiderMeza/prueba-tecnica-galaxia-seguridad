@@ -21,6 +21,7 @@ class SolicitudController extends Controller
     public function index(Request $request)
     {
         $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
             'estado_id' => ['nullable', 'integer'],
             'equipo_id' => ['nullable', 'integer'],
             'prioridad' => ['nullable', Rule::in(Solicitud::PRIORIDADES)],

@@ -67,6 +67,7 @@ routes/api.php  →  middleware (auth:sanctum, rol:...)  →  FormRequest (valid
 | `bootstrap/app.php` | Registro del middleware de rol y manejo centralizado de errores en JSON |
 | `lang/es/` | Mensajes de validación en español |
 | `tests/Feature/ApiTest.php` | 13 pruebas automáticas de la API |
+| `tests/Feature/SeguridadTest.php` | 10 pruebas de las medidas de seguridad |
 | `Dockerfile`, `docker/start.sh` | Imagen de producción y arranque del contenedor |
 
 ### 3.3 Autenticación
@@ -75,7 +76,8 @@ routes/api.php  →  middleware (auth:sanctum, rol:...)  →  FormRequest (valid
 - `POST /api/login` valida correo y contraseña (guardada con hash bcrypt), revisa que el usuario esté activo y crea un token con `createToken()`. El token se guarda en la tabla `personal_access_tokens` (solo su hash).
 - La app envía el token en cada petición: `Authorization: Bearer <token>`. El middleware `auth:sanctum` identifica al usuario.
 - `POST /api/logout` borra el token actual. Desactivar un usuario borra todos sus tokens.
-- El login tiene límite de 10 intentos por minuto (`throttle:10,1`) contra ataques de fuerza bruta.
+- El login tiene límite de 5 intentos por minuto por correo e IP (`throttle:login`) contra ataques de fuerza bruta.
+- Cada token vence a los 7 días (`SANCTUM_EXPIRATION`); después la API responde 401 y la app vuelve al login.
 
 ### 3.4 Autorización por roles
 
@@ -118,7 +120,7 @@ stateDiagram-v2
 
 ### 3.7 Pruebas automáticas
 
-`php artisan test` ejecuta 13 pruebas de integración sobre una base de datos en memoria: login correcto e incorrecto, acceso sin token, catálogos, paginación y búsqueda de equipos, código único, permisos por rol, borrado con 409, flujo completo de una solicitud (crear, asignar, diagnosticar, resolver, cerrar, reabrir), visibilidad por rol, validaciones, inventario y administración de usuarios.
+`php artisan test` ejecuta 23 pruebas de integración (13 de funcionalidad y 10 de seguridad) sobre una base de datos en memoria: login correcto e incorrecto, acceso sin token, catálogos, paginación y búsqueda de equipos, código único, permisos por rol, borrado con 409, flujo completo de una solicitud (crear, asignar, diagnosticar, resolver, cerrar, reabrir), visibilidad por rol, validaciones, inventario y administración de usuarios.
 
 ## 4. App móvil (React Native + Expo)
 
@@ -178,14 +180,27 @@ Backend en Render (Docker), base de datos PostgreSQL en Neon y APK generado con 
 
 ## 7. Seguridad
 
-- Contraseñas con hash bcrypt (nunca en texto plano). El campo `password` está oculto en el JSON.
-- Tokens Sanctum; en la base solo se guarda el hash del token. En el teléfono el token va en almacenamiento seguro.
-- HTTPS en producción (Render) y SSL obligatorio hacia la base de datos (`DB_SSLMODE=require`).
-- Permisos verificados en el servidor en cada petición.
-- Límite de intentos de login.
-- `APP_DEBUG=false` en producción: los errores 500 no muestran detalles internos.
-- Secretos (cadena de conexión de Neon, `APP_KEY`) solo en las variables de entorno de Render, nunca en el repositorio.
-- Consultas con Eloquent y parámetros enlazados (`?`), lo que evita inyección SQL.
+Medidas implementadas en la API y en la app. Las pruebas automáticas de `tests/Feature/SeguridadTest.php` comprueban cada una.
+
+| Riesgo | Medida | Dónde |
+|---|---|---|
+| Robo de contraseñas | Se guardan con hash **bcrypt** (nunca en texto plano) y el campo `password` nunca sale en el JSON | `User` (`'password' => 'hashed'`, `$hidden`) |
+| Fuerza bruta en el login | Máximo **5 intentos por minuto** por correo + IP; después responde 429 | `AppServiceProvider` (limitador `login`) |
+| Abuso de la API | Máximo **120 peticiones por minuto** por usuario | `AppServiceProvider` (limitador `api`) |
+| Token robado o olvidado | Tokens Sanctum que **vencen a los 7 días**; en la base solo se guarda su hash; `logout` lo borra; desactivar un usuario borra todos sus tokens | `config/sanctum.php`, `AuthController`, `UsuarioController` |
+| Token en el teléfono | Se guarda en **SecureStore** (Keystore de Android / Keychain de iOS), no en texto plano | `app-movil/src/api/client.ts` |
+| Acceso indebido | Permisos verificados en el servidor en cada petición: por **rol** (middleware `rol:`) y por **registro** (un usuario solo ve sus solicitudes, un técnico solo atiende las asignadas) | `routes/api.php`, `SolicitudController`, `Solicitud::visiblesPara` |
+| Inyección SQL | Todas las consultas usan Eloquent o parámetros enlazados (`?`); el texto de búsqueda nunca se pega dentro del SQL | Controladores (`whereRaw('... LIKE ?', [$s])`) |
+| Datos manipulados (*mass assignment*) | Los modelos tienen `$fillable` y solo se guardan los campos validados (`$request->validated()`); campos como `tecnico_id` o `solicitante_id` los pone el servidor | Modelos y FormRequests |
+| Datos inválidos | Validación de cada campo y de los parámetros de búsqueda (tipo y longitud) antes de tocar la base | FormRequests y `validate()` |
+| Fuga de información en errores | `APP_DEBUG=false` en producción: los errores 500 muestran un mensaje genérico, sin rutas ni SQL | `bootstrap/app.php`, `render.yaml` |
+| Tráfico interceptado | **HTTPS** en Render, cabecera HSTS y SSL obligatorio hacia la base de datos (`DB_SSLMODE=require`) | `CabecerasSeguridad`, `render.yaml` |
+| Ataques desde navegador | Cabeceras `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` y `Referrer-Policy: no-referrer` | `app/Http/Middleware/CabecerasSeguridad.php` |
+| Secretos expuestos | `APP_KEY` y la cadena de conexión de Neon solo viven en las variables de entorno de Render; `.env` está en `.gitignore` | `render.yaml` (`generateValue`, `sync: false`) |
+
+**Copias de respaldo:** Neon guarda el historial de la base de datos y permite restaurarla a un momento anterior (*point-in-time restore*; en el plan gratuito la ventana es de pocas horas). Para una copia manual se puede usar `pg_dump` con la cadena de conexión de Neon. El código está respaldado en GitHub.
+
+**Cuentas de demostración:** las cuentas `@galaxia.com` con contraseña `password` existen solo para que el evaluador pruebe la app. En un uso real se cambian las contraseñas (o se desactivan esas cuentas) desde la administración de usuarios después de la evaluación.
 
 ## 8. Limitaciones conocidas y mejoras futuras
 

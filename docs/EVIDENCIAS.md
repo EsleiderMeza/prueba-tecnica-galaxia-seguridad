@@ -42,9 +42,9 @@ Capturas del 26/11/2026 de la app (versión web en tamaño de teléfono, 390×84
 
 ## 2. Pruebas automáticas del backend
 
-`php artisan test` en `backend/` ejecuta las 13 pruebas de [`tests/Feature/ApiTest.php`](../backend/tests/Feature/ApiTest.php):
+`php artisan test` en `backend/` ejecuta 23 pruebas: 13 de funcionalidad en [`tests/Feature/ApiTest.php`](../backend/tests/Feature/ApiTest.php) y 10 de seguridad en [`tests/Feature/SeguridadTest.php`](../backend/tests/Feature/SeguridadTest.php).
 
-Última ejecución (26/11/2026, PHP 8.3): **13 pruebas correctas, 133 verificaciones (assertions), 0 fallos**.
+Última ejecución (26/11/2026, PHP 8.3): **23 pruebas correctas, 194 verificaciones (assertions), 0 fallos**.
 
 | Prueba | Qué verifica |
 |---|---|
@@ -61,6 +61,21 @@ Capturas del 26/11/2026 de la app (versión web en tamaño de teléfono, 390×84
 | `validacion_de_solicitud` | Reglas de validación → 422 |
 | `inventario` | Totales del inventario |
 | `administracion_de_usuarios_solo_admin` | CRUD de usuarios restringido al administrador |
+
+Pruebas de seguridad (`SeguridadTest.php`):
+
+| Prueba | Qué verifica |
+|---|---|
+| `contrasenas_se_guardan_cifradas_con_hash` | La contraseña se guarda con hash y nunca sale en el JSON |
+| `login_bloquea_fuerza_bruta_despues_de_5_intentos` | Al sexto intento en un minuto → 429 |
+| `token_vence_y_logout_lo_invalida` | Tras cerrar sesión o pasados 7 días el token → 401 |
+| `usuario_inactivo_no_puede_entrar` | Usuario desactivado no recibe token |
+| `inyeccion_sql_en_busquedas_se_trata_como_texto` | `' OR '1'='1`, `DROP TABLE` y `UNION SELECT` se tratan como texto; la base queda intacta |
+| `parametros_con_tipo_incorrecto_responden_422_y_no_500` | Parámetros mal formados se rechazan sin error interno |
+| `no_se_pueden_asignar_campos_protegidos_al_crear_solicitud` | Enviar `tecnico_id` o `solicitante_id` no tiene efecto (*mass assignment*) |
+| `usuario_no_ve_ni_atiende_solicitudes_ajenas` | Permisos por registro → 403 |
+| `respuestas_incluyen_cabeceras_de_seguridad` | Cabeceras `nosniff`, `DENY` y límite de peticiones |
+| `errores_internos_no_muestran_detalles_en_produccion` | Un error 500 no revela SQL ni rutas |
 
 ## 3. Despliegue en funcionamiento
 
