@@ -58,6 +58,17 @@ Las migraciones y los datos de prueba se ejecutan solos. Usuarios de prueba (cla
    ```
 4. Al terminar, EAS muestra un enlace y un código QR para descargar el APK.
 
+## Estado actual del despliegue
+
+| Qué | Dónde |
+|---|---|
+| API | https://galaxia-soporte-api.onrender.com (comprobación: `/up`) |
+| Base de datos | Neon, proyecto `galaxia-soporte` (AWS US East 2, Ohio) |
+| Proyecto EAS | `@esleidermeza/galaxia-soporte` |
+| Primer APK (26 nov 2026) | https://expo.dev/accounts/esleidermeza/projects/galaxia-soporte/builds/d774504c-63e3-47fb-ae34-97c322a467ca |
+
+La primera vez, `eas build` crea el proyecto en Expo y agrega su `projectId` a `app-movil/app.json`; conviene subir ese cambio al repositorio para que los siguientes builds usen el mismo proyecto. Para un APK nuevo basta repetir `npx eas-cli@latest build -p android --profile preview` dentro de `app-movil`.
+
 ## Limitaciones del plan gratuito
 
 - Render apaga el servidor tras 15 minutos sin uso. La primera petición después de eso tarda entre 30 y 60 segundos; la app espera hasta 60 segundos antes de mostrar un error.
