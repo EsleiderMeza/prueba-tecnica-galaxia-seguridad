@@ -1,0 +1,6 @@
+{
+  "name": "galaxia-mock-api",
+  "private": true,
+  "description": "API simulada en memoria para probar la app móvil sin el backend Laravel",
+  "scripts": { "start": "node server.js" }
+}
