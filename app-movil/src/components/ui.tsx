@@ -339,7 +339,7 @@ export const styles = StyleSheet.create({
   formError: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDECEA',
+    backgroundColor: colors.dangerBg,
     borderRadius: radius,
     padding: spacing.md,
     marginBottom: spacing.md,
@@ -354,7 +354,7 @@ export const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.red,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 4,

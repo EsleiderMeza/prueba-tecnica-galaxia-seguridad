@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import type { ScrollViewInstance } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { CatalogoApi, EquiposApi } from '../../api/endpoints';
 import { ApiError, errorMessage } from '../../api/client';
@@ -31,6 +32,8 @@ export default function EquipoForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const scrollRef = useRef<ScrollViewInstance>(null);
+  const toTop = () => scrollRef.current?.scrollTo({ y: 0, animated: true });
 
   useEffect(() => {
     (async () => {
@@ -76,7 +79,11 @@ export default function EquipoForm() {
       local.fecha_adquisicion = ['Usa el formato AAAA-MM-DD.'];
     setErrors(local);
     setError(null);
-    if (Object.keys(local).length) return;
+    if (Object.keys(local).length) {
+      setError('Revisa los campos marcados en rojo.');
+      toTop();
+      return;
+    }
 
     setSaving(true);
     try {
@@ -87,6 +94,7 @@ export default function EquipoForm() {
     } catch (e) {
       if (e instanceof ApiError && e.status === 422) setErrors(e.errors);
       setError(errorMessage(e));
+      toTop();
     } finally {
       setSaving(false);
     }
@@ -97,7 +105,7 @@ export default function EquipoForm() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <Stack.Screen options={{ title: editId ? 'Editar equipo' : 'Registrar equipo' }} />
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView ref={scrollRef} style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <FormError message={error} />
         <Field label="Código de inventario *" value={form.codigo_inventario} onChangeText={(v) => set('codigo_inventario', v)} autoCapitalize="characters" placeholder="GS-PC-001" error={err('codigo_inventario')} />
         <Field label="Nombre *" value={form.nombre} onChangeText={(v) => set('nombre', v)} placeholder="Portátil contabilidad" error={err('nombre')} />

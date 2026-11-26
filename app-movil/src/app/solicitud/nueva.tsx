@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text } from 'react-native';
+import type { ScrollViewInstance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { CatalogoApi, EquiposApi, SolicitudesApi } from '../../api/endpoints';
 import { ApiError, errorMessage } from '../../api/client';
@@ -22,6 +23,8 @@ export default function NuevaSolicitud() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const scrollRef = useRef<ScrollViewInstance>(null);
+  const toTop = () => scrollRef.current?.scrollTo({ y: 0, animated: true });
 
   useEffect(() => {
     (async () => {
@@ -52,7 +55,11 @@ export default function NuevaSolicitud() {
     if (form.descripcion.trim().length < 10) local.descripcion = ['Agrega más detalle (mínimo 10 caracteres).'];
     setErrors(local);
     setError(null);
-    if (Object.keys(local).length) return;
+    if (Object.keys(local).length) {
+      setError('Revisa los campos marcados en rojo.');
+      toTop();
+      return;
+    }
 
     setSaving(true);
     try {
@@ -61,6 +68,7 @@ export default function NuevaSolicitud() {
     } catch (e) {
       if (e instanceof ApiError && e.status === 422) setErrors(e.errors);
       setError(errorMessage(e));
+      toTop();
     } finally {
       setSaving(false);
     }
@@ -70,7 +78,7 @@ export default function NuevaSolicitud() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView ref={scrollRef} style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={[styles.muted, { marginBottom: 12 }]}>Reporta una falla o requerimiento. El área de tecnología asignará un técnico.</Text>
         <FormError message={error} />
         <Select

@@ -1,4 +1,4 @@
-import { Alert, Platform, RefreshControl, ScrollView, Text } from 'react-native';
+import { Alert, Platform, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { EquiposApi } from '../../api/endpoints';
@@ -48,8 +48,10 @@ export default function EquipoDetalle() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={reload} />}>
       <Stack.Screen options={{ title: e.codigo_inventario }} />
       <Card>
-        <Text style={[styles.title, { fontSize: 20 }]}>{e.nombre}</Text>
-        <Badge label={est.label} color={est.color} />
+        <Text style={[styles.title, { fontSize: 20, marginBottom: 6 }]}>{e.nombre}</Text>
+        <View style={{ marginBottom: 8 }}>
+          <Badge label={est.label} color={est.color} />
+        </View>
         <InfoRow label="Código de inventario" value={e.codigo_inventario} />
         <InfoRow label="Categoría" value={e.categoria?.nombre} />
         <InfoRow label="Marca" value={e.marca} />

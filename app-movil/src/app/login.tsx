@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from '../context/auth';
 import { ApiError, API_URL, errorMessage } from '../api/client';
 import { Button, Field, FormError, styles } from '../components/ui';
+import { Logo } from '../components/Logo';
 import { colors, spacing } from '../theme';
 
 export default function LoginScreen() {
@@ -40,17 +40,15 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.primary }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.black }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: spacing.xl }} keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center', marginBottom: spacing.xl }}>
-          <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}>
-            <Ionicons name="shield-checkmark" size={44} color={colors.primaryDark} />
-          </View>
-          <Text style={{ color: '#fff', fontSize: 24, fontWeight: '800', marginTop: spacing.md }}>Galaxia Soporte</Text>
-          <Text style={{ color: '#C9D6F0', marginTop: 4 }}>Soporte técnico e inventario tecnológico</Text>
+          <Logo size={84} />
+          <Text style={{ color: '#fff', fontSize: 22, fontWeight: '800', marginTop: spacing.md }}>Soporte Técnico</Text>
+          <Text style={{ color: '#BDBDBD', marginTop: 4 }}>Soporte técnico e inventario tecnológico</Text>
         </View>
 
-        <View style={[styles.card, { padding: spacing.xl }]}>
+        <View style={[styles.card, { padding: spacing.xl, borderTopWidth: 4, borderTopColor: colors.red }]}>
           <Text style={[styles.title, { marginBottom: spacing.lg }]}>Iniciar sesión</Text>
           <FormError message={error} />
           <Field
@@ -75,7 +73,7 @@ export default function LoginScreen() {
           />
           <Button title="Ingresar" onPress={submit} loading={loading} />
         </View>
-        <Text style={{ color: '#9FB3DA', fontSize: 11, textAlign: 'center', marginTop: spacing.md }}>Servidor: {API_URL}</Text>
+        <Text style={{ color: '#8A8A8A', fontSize: 11, textAlign: 'center', marginTop: spacing.md }}>Servidor: {API_URL}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
