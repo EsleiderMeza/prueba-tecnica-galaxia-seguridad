@@ -17,6 +17,12 @@ case "$APP_KEY" in
   *) export APP_KEY="base64:${APP_KEY}" ;;
 esac
 
+# Neon: el host "-pooler" pasa por PgBouncer en modo transacción, que rompe las
+# migraciones de Laravel. Se usa siempre la conexión directa (sin "-pooler").
+if [ -n "$DB_URL" ]; then
+  export DB_URL="$(printf '%s' "$DB_URL" | sed 's/-pooler\././')"
+fi
+
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
