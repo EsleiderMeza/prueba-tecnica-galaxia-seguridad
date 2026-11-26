@@ -5,7 +5,7 @@ API del sistema de soporte técnico e inventario de Galaxia Seguridad.
 - **Laravel 13** (PHP 8.3 o superior) con **Sanctum** (token Bearer).
 - Base de datos relacional: **SQLite** para trabajar en local (no hay que instalar nada más) y **PostgreSQL** o MySQL en el despliegue. Solo cambia el archivo `.env`.
 - Sigue el contrato de la app móvil: [`app-movil/docs/API_CONTRACT.md`](../app-movil/docs/API_CONTRACT.md).
-- Referencia de rutas: [`docs/API.md`](docs/API.md). Modelo de datos: [`docs/BASE_DE_DATOS.md`](docs/BASE_DE_DATOS.md).
+- Referencia de rutas: [`docs/API.md`](../docs/API.md). Modelo de datos: [`docs/BASE_DE_DATOS.md`](../docs/BASE_DE_DATOS.md).
 
 ## Usuarios de prueba
 
