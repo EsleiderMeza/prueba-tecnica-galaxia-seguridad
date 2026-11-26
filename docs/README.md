@@ -13,11 +13,6 @@ Documentación entregada para la prueba técnica de Galaxia Seguridad (sección 
 | 7 | Evidencias de funcionamiento | [EVIDENCIAS.md](EVIDENCIAS.md) y capturas en [evidencias/](evidencias/app-movil/) |
 | 8 | Repositorio Git con el código fuente | https://github.com/EsleiderMeza/prueba-tecnica-galaxia-seguridad |
 
-Material de apoyo para la sustentación:
-
-- [GUIA_SUSTENTACION.md](GUIA_SUSTENTACION.md): explicación en lenguaje sencillo de la arquitectura, tecnologías, base de datos, roles y despliegue, con preguntas probables.
-- [GUIA_ESTUDIO_REACT_LARAVEL.md](GUIA_ESTUDIO_REACT_LARAVEL.md): conceptos de React Native y Laravel con ejemplos del propio código y banco de preguntas.
-
 ## Datos de acceso para la evaluación
 
 | Qué | Valor |
