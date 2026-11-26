@@ -5,11 +5,13 @@ Sistema de gestión de soporte técnico e inventario tecnológico.
 | Carpeta | Contenido | Estado |
 |---|---|---|
 | [`app-movil/`](app-movil/) | App React Native (Expo SDK 58, TypeScript) | Primera versión completa |
-| [`mock-api/`](mock-api/) | API simulada en memoria, **solo para desarrollo** mientras no existe el backend | Lista |
-| `backend/` | API REST Laravel | Pendiente |
+| [`mock-api/`](mock-api/) | API simulada en memoria, solo para desarrollo de la app (ya no es necesaria) | Lista |
+| [`backend/`](backend/) | API REST Laravel 13 + Sanctum, SQLite en local / PostgreSQL en producción | Completa, con pruebas |
 | [`docs/`](docs/) | Evidencias y documentación | En progreso |
 
 El contrato entre la app y el backend está en [`app-movil/docs/API_CONTRACT.md`](app-movil/docs/API_CONTRACT.md).
+
+**Para usar la app con el backend real (Laravel)** sigue [`backend/README.md`](backend/README.md): instalar PHP y Composer, `composer install`, `php artisan migrate --seed`, `php artisan serve --host=0.0.0.0 --port=8000`, y en `app-movil/.env` poner `EXPO_PUBLIC_API_URL=http://TU_IP:8000/api`.
 
 ---
 
