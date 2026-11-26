@@ -7,7 +7,14 @@ Sistema de gestión de soporte técnico e inventario tecnológico.
 | [`app-movil/`](app-movil/) | App React Native (Expo SDK 58, TypeScript) | Primera versión completa |
 | [`mock-api/`](mock-api/) | API simulada en memoria, solo para desarrollo de la app (ya no es necesaria) | Lista |
 | [`backend/`](backend/) | API REST Laravel 13 + Sanctum, SQLite en local / PostgreSQL en producción | Completa, con pruebas |
-| [`docs/`](docs/) | Evidencias y documentación | En progreso |
+| [`docs/`](docs/) | Manuales, API, diagrama ER, despliegue y evidencias | Completa |
+
+## Entrega
+
+- **Documentación completa**: [`docs/README.md`](docs/README.md) (manual técnico, de instalación y de usuario, API, diagrama entidad-relación, despliegue y evidencias).
+- **API publicada**: https://galaxia-soporte-api.onrender.com/api
+- **App instalable**: APK de Expo EAS, ver [`docs/DESPLIEGUE.md`](docs/DESPLIEGUE.md#estado-actual-del-despliegue).
+- **Credenciales de prueba** (contraseña `password`): admin@galaxia.com, tecnico@galaxia.com, tecnico2@galaxia.com, usuario@galaxia.com.
 
 El contrato entre la app y el backend está en [`app-movil/docs/API_CONTRACT.md`](app-movil/docs/API_CONTRACT.md).
 

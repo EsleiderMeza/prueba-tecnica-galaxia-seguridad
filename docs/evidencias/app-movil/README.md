@@ -8,4 +8,6 @@ Recorrido automatizado con Playwright: 30 de 30 pasos correctos.
 |---|---|---|
 | `a01`–`a16` | Administrador | Login (validación y clave errónea), panel, equipos (búsqueda, filtro, detalle, edición, registro con errores de la API), nueva solicitud, asignación de técnico, diagnóstico, solicitudes, inventario e historial |
 | `t01`–`t04` | Técnico | Panel, filtro "solo asignadas a mí", diagnóstico y solución, cambio de estado a Resuelta y Cerrada |
-| `u01`–`u05` | Usuario | Panel sin opciones de gestión, equipo sin editar/eliminar, creación de solicitud sin acciones técnicas, solo sus solicitudes, historial |
+| `u01`–`u02` | Usuario | Panel sin opciones de gestión y ficha de equipo sin editar/eliminar |
+
+Índice detallado de cada captura y de las pruebas automáticas: [`docs/EVIDENCIAS.md`](../../EVIDENCIAS.md).

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 | API REST de Galaxia Seguridad. Todas las rutas tienen el prefijo /api.
-| Contrato completo: docs/API.md
+| Documentación completa: docs/API.md (en la raíz del repositorio)
 */
 
 Route::get('/', fn () => response()->json([
