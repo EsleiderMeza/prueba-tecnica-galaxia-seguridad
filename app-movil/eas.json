@@ -5,8 +5,11 @@
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://CAMBIAR-URL-DEL-BACKEND/api" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://galaxia-soporte-api.onrender.com/api" }
     },
-    "production": {}
+    "production": {
+      "android": { "buildType": "app-bundle" },
+      "env": { "EXPO_PUBLIC_API_URL": "https://galaxia-soporte-api.onrender.com/api" }
+    }
   }
 }

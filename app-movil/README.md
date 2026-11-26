@@ -63,7 +63,7 @@ npx eas-cli@latest login
 npx eas-cli@latest build -p android --profile preview   # genera un .apk descargable
 ```
 
-El perfil `preview` de `eas.json` produce un APK y fija `EXPO_PUBLIC_API_URL`; actualízalo con la URL pública del backend antes de compilar.
+El perfil `preview` de `eas.json` produce un APK que usa la API pública `https://galaxia-soporte-api.onrender.com/api` (ver `docs/DESPLIEGUE.md`).
 
 ## Verificación
 
