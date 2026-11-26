@@ -18,7 +18,7 @@ export default function TabsLayout() {
         headerStyle: { backgroundColor: colors.primary },
         headerTintColor: '#fff',
         headerTitleStyle: { fontWeight: '700' },
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: colors.red,
         tabBarInactiveTintColor: colors.muted,
         sceneStyle: { backgroundColor: colors.bg },
       }}
