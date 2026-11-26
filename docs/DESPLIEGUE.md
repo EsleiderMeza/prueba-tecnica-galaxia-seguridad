@@ -64,5 +64,9 @@ Las migraciones y los datos de prueba se ejecutan solos. Usuarios de prueba (cla
 - Neon suspende el cómputo sin uso y lo reactiva en menos de un segundo; los datos se conservan.
 - Render da 750 horas gratis al mes por cuenta, suficiente para un servicio encendido todo el mes.
 
+## Problemas conocidos
+
+- **Migraciones fallan con `SQLSTATE[25P02] ... current transaction is aborted` usando Neon.** La cadena que da Neon por defecto apunta al host con `-pooler` (PgBouncer en modo transacción), que no funciona bien con las migraciones de Laravel. `start.sh` quita `-pooler` del host automáticamente para usar la conexión directa, así que se puede pegar la cadena tal cual la da Neon.
+
 ## Actualizar
 Cada push a `main` redespliega la API automáticamente. Las migraciones nuevas se aplican al arrancar.
