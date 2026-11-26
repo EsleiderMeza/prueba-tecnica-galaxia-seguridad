@@ -70,7 +70,8 @@ function buildUrl(path: string, query?: Query): string {
   return params.length ? `${url}?${params.join('&')}` : url;
 }
 
-const TIMEOUT_MS = 20000;
+// 60 s: el plan gratuito de Render "duerme" el servidor y tarda hasta ~1 min en despertar.
+const TIMEOUT_MS = 60000;
 
 export async function request<T>(
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
@@ -96,7 +97,7 @@ export async function request<T>(
     const aborted = e instanceof Error && e.name === 'AbortError';
     throw new ApiError(
       aborted
-        ? 'El servidor tardó demasiado en responder. Intenta de nuevo.'
+        ? 'El servidor tardó demasiado en responder (puede estar despertando). Intenta de nuevo en unos segundos.'
         : 'No se pudo conectar con el servidor. Revisa tu conexión a internet.',
       0,
     );
