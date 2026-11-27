@@ -14,6 +14,11 @@ class UsuarioController extends Controller
 {
     public function index(Request $request)
     {
+        $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'rol' => ['nullable', 'string', 'max:30'],
+        ]);
+
         $usuarios = User::with('rol')
             ->when($request->filled('search'), function ($q) use ($request) {
                 $s = $this->like($request->search);

@@ -7,7 +7,7 @@ import { Logo } from '../components/Logo';
 import { colors, spacing } from '../theme';
 
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, aviso } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function LoginScreen() {
 
         <View style={[styles.card, { padding: spacing.xl, borderTopWidth: 4, borderTopColor: colors.red }]}>
           <Text style={[styles.title, { marginBottom: spacing.lg }]}>Iniciar sesión</Text>
-          <FormError message={error} />
+          <FormError message={error ?? aviso} />
           <Field
             label="Correo electrónico"
             value={email}

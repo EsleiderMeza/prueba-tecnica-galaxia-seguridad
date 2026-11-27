@@ -107,7 +107,7 @@ y volver a ejecutar `php artisan migrate --seed`.
 php artisan test
 ```
 
-Deben pasar las 13 pruebas.
+Deben pasar las 24 pruebas.
 
 ### C.4 App móvil apuntando al backend local
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CabecerasSeguridad;
 use App\Http\Middleware\VerificarRol;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -32,6 +33,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['rol' => VerificarRol::class]);
         $middleware->trustProxies(at: '*'); // detrás del proxy HTTPS del hosting
+        $middleware->append(CabecerasSeguridad::class);
+        $middleware->throttleApi(); // límite general "api" (ver AppServiceProvider)
     })
     ->withExceptions(function (Exceptions $exceptions) use ($nombres): void {
         $exceptions->shouldRenderJsonWhen(
@@ -52,7 +55,11 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if ($e instanceof AuthenticationException) {
-                return response()->json(['message' => 'Unauthenticated.'], 401);
+                $mensaje = $request->attributes->get('sesion_inactiva')
+                    ? 'Tu sesión se cerró por inactividad. Inicia sesión de nuevo.'
+                    : 'Unauthenticated.';
+
+                return response()->json(['message' => $mensaje], 401);
             }
 
             if ($e instanceof AuthorizationException || $e instanceof AccessDeniedHttpException) {

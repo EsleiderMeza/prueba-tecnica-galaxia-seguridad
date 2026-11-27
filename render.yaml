@@ -23,6 +23,8 @@ services:
         value: es
       - key: APP_FALLBACK_LOCALE
         value: es
+      - key: SESSION_IDLE_MINUTES
+        value: "15"
       - key: LOG_CHANNEL
         value: stderr
       - key: LOG_LEVEL

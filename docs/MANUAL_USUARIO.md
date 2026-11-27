@@ -21,7 +21,7 @@ Cuentas de prueba (contraseña `password`): `usuario@galaxia.com`, `tecnico@gala
 1. Abrir la app **Galaxia Soporte**.
 2. Escribir el correo y la contraseña y pulsar **Ingresar**.
 3. Si falta un dato o el correo no es válido, el error aparece debajo del campo. Si la clave es incorrecta aparece "Las credenciales no son válidas."
-4. La sesión queda guardada: al volver a abrir la app no hay que ingresar de nuevo.
+4. La sesión queda guardada mientras se use la app. Por seguridad, si pasan 15 minutos sin usarla, la sesión se cierra sola y hay que ingresar de nuevo.
 5. Para salir, pulsar el ícono de **salida** arriba a la derecha del Panel.
 
 > La primera vez del día el servidor puede tardar hasta un minuto en responder (está "despertando"). Si aparece un aviso, reintentar.
@@ -164,5 +164,6 @@ La API ofrece al administrador la gestión de usuarios (crear, editar, desactiva
 | "No se pudo conectar con el servidor" | Revisar la conexión a internet. |
 | "El servidor tardó demasiado en responder" | El servidor estaba dormido; esperar unos segundos y reintentar. |
 | "Tu sesión expiró" | Iniciar sesión de nuevo. |
+| "Tu sesión se cerró por inactividad" | Pasaron 15 minutos sin usar la app. Iniciar sesión de nuevo. |
 | "No tienes permiso para realizar esta acción" | La acción no corresponde a tu rol. |
 | "Tu usuario está inactivo" | Pedir al administrador que lo active. |
