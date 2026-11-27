@@ -55,7 +55,11 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if ($e instanceof AuthenticationException) {
-                return response()->json(['message' => 'Unauthenticated.'], 401);
+                $mensaje = $request->attributes->get('sesion_inactiva')
+                    ? 'Tu sesión se cerró por inactividad. Inicia sesión de nuevo.'
+                    : 'Unauthenticated.';
+
+                return response()->json(['message' => $mensaje], 401);
             }
 
             if ($e instanceof AuthorizationException || $e instanceof AccessDeniedHttpException) {

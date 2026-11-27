@@ -42,9 +42,9 @@ Capturas del 26/11/2026 de la app (versión web en tamaño de teléfono, 390×84
 
 ## 2. Pruebas automáticas del backend
 
-`php artisan test` en `backend/` ejecuta 23 pruebas: 13 de funcionalidad en [`tests/Feature/ApiTest.php`](../backend/tests/Feature/ApiTest.php) y 10 de seguridad en [`tests/Feature/SeguridadTest.php`](../backend/tests/Feature/SeguridadTest.php).
+`php artisan test` en `backend/` ejecuta 24 pruebas: 13 de funcionalidad en [`tests/Feature/ApiTest.php`](../backend/tests/Feature/ApiTest.php) y 11 de seguridad en [`tests/Feature/SeguridadTest.php`](../backend/tests/Feature/SeguridadTest.php).
 
-Última ejecución (26/11/2026, PHP 8.3): **23 pruebas correctas, 194 verificaciones (assertions), 0 fallos**.
+Última ejecución (26/11/2026, PHP 8.3): **24 pruebas correctas, 199 verificaciones (assertions), 0 fallos**.
 
 | Prueba | Qué verifica |
 |---|---|
@@ -69,6 +69,7 @@ Pruebas de seguridad (`SeguridadTest.php`):
 | `contrasenas_se_guardan_cifradas_con_hash` | La contraseña se guarda con hash y nunca sale en el JSON |
 | `login_bloquea_fuerza_bruta_despues_de_5_intentos` | Al sexto intento en un minuto → 429 |
 | `token_vence_y_logout_lo_invalida` | Tras cerrar sesión o pasados 7 días el token → 401 |
+| `sesion_se_cierra_tras_15_minutos_sin_uso` | Usando la app la sesión sigue; 16 minutos sin uso → 401 "Tu sesión se cerró por inactividad" y el token se borra |
 | `usuario_inactivo_no_puede_entrar` | Usuario desactivado no recibe token |
 | `inyeccion_sql_en_busquedas_se_trata_como_texto` | `' OR '1'='1`, `DROP TABLE` y `UNION SELECT` se tratan como texto; la base queda intacta |
 | `parametros_con_tipo_incorrecto_responden_422_y_no_500` | Parámetros mal formados se rechazan sin error interno |

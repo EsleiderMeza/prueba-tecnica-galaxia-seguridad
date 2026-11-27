@@ -67,7 +67,7 @@ routes/api.php  →  middleware (auth:sanctum, rol:...)  →  FormRequest (valid
 | `bootstrap/app.php` | Registro del middleware de rol y manejo centralizado de errores en JSON |
 | `lang/es/` | Mensajes de validación en español |
 | `tests/Feature/ApiTest.php` | 13 pruebas automáticas de la API |
-| `tests/Feature/SeguridadTest.php` | 10 pruebas de las medidas de seguridad |
+| `tests/Feature/SeguridadTest.php` | 11 pruebas de las medidas de seguridad |
 | `Dockerfile`, `docker/start.sh` | Imagen de producción y arranque del contenedor |
 
 ### 3.3 Autenticación
@@ -78,6 +78,7 @@ routes/api.php  →  middleware (auth:sanctum, rol:...)  →  FormRequest (valid
 - `POST /api/logout` borra el token actual. Desactivar un usuario borra todos sus tokens.
 - El login tiene límite de 5 intentos por minuto por correo e IP (`throttle:login`) contra ataques de fuerza bruta.
 - Cada token vence a los 7 días (`SANCTUM_EXPIRATION`); después la API responde 401 y la app vuelve al login.
+- **Cierre por inactividad:** si pasan 15 minutos sin usar la app (`SESSION_IDLE_MINUTES`), el token se borra y la app vuelve al login con el aviso "Tu sesión se cerró por inactividad". Se usa la columna `last_used_at` que Sanctum actualiza en cada petición.
 
 ### 3.4 Autorización por roles
 
@@ -120,7 +121,7 @@ stateDiagram-v2
 
 ### 3.7 Pruebas automáticas
 
-`php artisan test` ejecuta 23 pruebas de integración (13 de funcionalidad y 10 de seguridad) sobre una base de datos en memoria: login correcto e incorrecto, acceso sin token, catálogos, paginación y búsqueda de equipos, código único, permisos por rol, borrado con 409, flujo completo de una solicitud (crear, asignar, diagnosticar, resolver, cerrar, reabrir), visibilidad por rol, validaciones, inventario y administración de usuarios.
+`php artisan test` ejecuta 24 pruebas de integración (13 de funcionalidad y 11 de seguridad) sobre una base de datos en memoria: login correcto e incorrecto, acceso sin token, catálogos, paginación y búsqueda de equipos, código único, permisos por rol, borrado con 409, flujo completo de una solicitud (crear, asignar, diagnosticar, resolver, cerrar, reabrir), visibilidad por rol, validaciones, inventario y administración de usuarios.
 
 ## 4. App móvil (React Native + Expo)
 
@@ -187,6 +188,7 @@ Medidas implementadas en la API y en la app. Las pruebas automáticas de `tests/
 | Robo de contraseñas | Se guardan con hash **bcrypt** (nunca en texto plano) y el campo `password` nunca sale en el JSON | `User` (`'password' => 'hashed'`, `$hidden`) |
 | Fuerza bruta en el login | Máximo **5 intentos por minuto** por correo + IP; después responde 429 | `AppServiceProvider` (limitador `login`) |
 | Abuso de la API | Máximo **120 peticiones por minuto** por usuario | `AppServiceProvider` (limitador `api`) |
+| Teléfono olvidado con la sesión abierta | **Cierre por inactividad a los 15 minutos** sin uso: el token se borra y la app pide iniciar sesión de nuevo | `AppServiceProvider` (`Sanctum::authenticateAccessTokensUsing`), `SESSION_IDLE_MINUTES` |
 | Token robado o olvidado | Tokens Sanctum que **vencen a los 7 días**; en la base solo se guarda su hash; `logout` lo borra; desactivar un usuario borra todos sus tokens | `config/sanctum.php`, `AuthController`, `UsuarioController` |
 | Token en el teléfono | Se guarda en **SecureStore** (Keystore de Android / Keychain de iOS), no en texto plano | `app-movil/src/api/client.ts` |
 | Acceso indebido | Permisos verificados en el servidor en cada petición: por **rol** (middleware `rol:`) y por **registro** (un usuario solo ve sus solicitudes, un técnico solo atiende las asignadas) | `routes/api.php`, `SolicitudController`, `Solicitud::visiblesPara` |

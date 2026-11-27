@@ -59,11 +59,32 @@ class SeguridadTest extends TestCase
         $this->app['auth']->forgetGuards();
         $this->withToken($token)->getJson('/api/me')->assertStatus(401);
 
-        // Un token más viejo que SANCTUM_EXPIRATION ya no sirve.
+        // Un token más viejo que SANCTUM_EXPIRATION ya no sirve (aunque no hubiera cierre por inactividad).
+        config(['sanctum.idle_minutes' => 0]);
         $token = $this->postJson('/api/login', ['email' => 'usuario@galaxia.com', 'password' => 'password'])->json('token');
         $this->app['auth']->forgetGuards();
         $this->travel(config('sanctum.expiration') + 1)->minutes();
         $this->withToken($token)->getJson('/api/me')->assertStatus(401);
+    }
+
+    public function test_sesion_se_cierra_tras_15_minutos_sin_uso(): void
+    {
+        $token = $this->postJson('/api/login', ['email' => 'usuario@galaxia.com', 'password' => 'password'])->json('token');
+
+        // Mientras se use la app, la sesión sigue abierta.
+        $this->travel(10)->minutes();
+        $this->withToken($token)->getJson('/api/me')->assertOk();
+        $this->app['auth']->forgetGuards();
+        $this->travel(10)->minutes();
+        $this->withToken($token)->getJson('/api/me')->assertOk();
+        $this->app['auth']->forgetGuards();
+
+        // 16 minutos sin uso: 401 con mensaje claro y el token se borra.
+        $this->travel(16)->minutes();
+        $this->withToken($token)->getJson('/api/me')
+            ->assertStatus(401)
+            ->assertJsonPath('message', 'Tu sesión se cerró por inactividad. Inicia sesión de nuevo.');
+        $this->assertDatabaseCount('personal_access_tokens', 0);
     }
 
     public function test_usuario_inactivo_no_puede_entrar(): void

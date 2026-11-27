@@ -49,13 +49,13 @@ export class ApiError extends Error {
 }
 
 let currentToken: string | null = null;
-let onUnauthorized: (() => void) | null = null;
+let onUnauthorized: ((message?: string) => void) | null = null;
 
 export function setToken(token: string | null) {
   currentToken = token;
 }
 
-export function setUnauthorizedHandler(handler: (() => void) | null) {
+export function setUnauthorizedHandler(handler: ((message?: string) => void) | null) {
   onUnauthorized = handler;
 }
 
@@ -116,7 +116,7 @@ export async function request<T>(
   }
 
   if (!response.ok) {
-    if (response.status === 401 && onUnauthorized && path !== '/login') onUnauthorized();
+    if (response.status === 401 && onUnauthorized && path !== '/login') onUnauthorized(json?.message);
     const fallback: Record<number, string> = {
       401: 'Tu sesión expiró. Inicia sesión de nuevo.',
       403: 'No tienes permiso para realizar esta acción.',
